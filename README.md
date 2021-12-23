@@ -1,0 +1,1 @@
+![alt text](images/interface-classebase-classeconcreta.png?raw=true=250x250 "Title")
