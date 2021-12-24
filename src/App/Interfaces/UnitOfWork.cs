@@ -13,9 +13,11 @@ namespace App.Interfaces
             _connection = connection;
         }
 
-        public IDbCommand CreateCommand()
+        public IDbCommand CreateCommand(CommandType commandType, string commandText)
         {
             var command = _connection.CreateCommand();
+            command.CommandType = commandType;
+            command.CommandText = commandText;
             command.Transaction = _transaction;
             return command;
         }

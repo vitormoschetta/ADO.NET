@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  sqlserver:
+    container_name: ado.sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest    
+    ports:
+      - "1433:1433"   
+    volumes:      
+      - ./docker/sqlserver/seeds/:/tmp/seeds/
+    environment:
+      SA_PASSWORD: "Pass123*"
+      ACCEPT_EULA: "Y"      
+
+  postgres:
+    container_name: ado.postgres
+    image: postgres    
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5501:5432
+    expose:
+      - 5501
+    volumes:
+      - ./docker/postgres/bootstrap/:/docker-entrypoint-initdb.d/
+      - ./docker/postgres/seeds/:/tmp/seeds/ 
+
+  oracle:
+    container_name: ado.oracle
+    image: store/oracle/database-enterprise:12.2.0.1-slim    
+    ports:
+      - "5500:5500"
+      - "1521:1521"
+      

@@ -12,85 +12,63 @@ namespace App
     {
         static void Main(string[] args)
         {
-            var operacao = new Operacao()
-            {
-                ConnectionString = "Server=localhost;Database=master;User=sa;Password=Pass123*;",
-                Comando = "SELECT @@version",
-                Provider = EProvider.SqlServer,
-                CommandType = CommandType.Text,
-                ReturnCommamndType = EReturnCommamndType.ExecuteScalar
-            };
+            var dbSettings = new DbSettings().GetSqlServerDbSettings();            
+            Execute(dbSettings);
 
-            Execute(operacao);
-
-            Console.WriteLine(operacao.RespostaTexto);
+            Console.WriteLine(dbSettings.RespostaTexto);
+            //Console.WriteLine(dbSettings.RespostaInteiro);
         }
 
-        static void Execute(Operacao operacao)
+        static void Execute(DbSettings dbSettings)
         {
-            IDbConnection connection;            
+            IDbConnection connection;
 
-            switch (operacao.Provider)
+            switch (dbSettings.Provider)
             {
                 case EProvider.SqlServer:
-                    connection = new SqlConnection(operacao.ConnectionString);
+                    connection = new SqlConnection(dbSettings.ConnectionString);
                     break;
 
                 case EProvider.Postgresql:
-                    connection = new NpgsqlConnection(operacao.ConnectionString);
+                    connection = new NpgsqlConnection(dbSettings.ConnectionString);
                     break;
 
                 case EProvider.Oracle:
-                    connection = new OracleConnection(operacao.ConnectionString);
+                    connection = new OracleConnection(dbSettings.ConnectionString);
                     break;
 
                 default:
                     return;
             }
 
-            ExecuteCommand(operacao, connection);
+            ExecuteCommand(dbSettings, connection);
         }
 
-        static void ExecuteCommand(Operacao operacao, IDbConnection connection)
+        static void ExecuteCommand(DbSettings dbSettings, IDbConnection connection)
         {
             IUnitOfWork unitOfWork = new UnitOfWork(connection);
 
             unitOfWork.BeginTransaction();
 
-            var dbCommand = unitOfWork.CreateCommand();
+            var dbCommand = unitOfWork.CreateCommand(dbSettings.CommandType, dbSettings.Comando); 
 
-            dbCommand.CommandType = operacao.CommandType;
-            dbCommand.CommandText = operacao.Comando;
-
-            switch (operacao.ReturnCommamndType)
+            switch (dbSettings.ReturnCommamndType)
             {
                 case EReturnCommamndType.ExecuteNonQuery:
-                    operacao.RespostaInteiro = dbCommand.ExecuteNonQuery();
+                    dbSettings.RespostaInteiro = dbCommand.ExecuteNonQuery();
                     break;
 
                 case EReturnCommamndType.ExecuteScalar:
-                    operacao.RespostaTexto = (string)dbCommand.ExecuteScalar();
+                    dbSettings.RespostaTexto = (string)dbCommand.ExecuteScalar();
                     break;
 
                 case EReturnCommamndType.DataReader:
-                    operacao.RespostaDataReader = dbCommand.ExecuteReader();
+                    dbSettings.RespostaDataReader = dbCommand.ExecuteReader();
                     break;
 
                 default:
                     return;
             }
         }
-    }
-
-    public class Operacao
-    {
-        public string ConnectionString { get; set; }
-        public string Comando { get; set; }
-        public EProvider Provider { get; set; }
-        public CommandType CommandType { get; set; }
-        public EReturnCommamndType ReturnCommamndType { get; set; }
-        public string RespostaTexto { get; set; }
-        public int RespostaInteiro { get; set; }
-        public IDataReader RespostaDataReader { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace App.Interfaces
     {        
         IDbTransaction _transaction { get; set; }
         IDbConnection _connection { get; set; }
-        IDbCommand CreateCommand();
+        IDbCommand CreateCommand(CommandType commandType, string commandText);
         void BeginTransaction();
         void Commit();
         void Rollback();
