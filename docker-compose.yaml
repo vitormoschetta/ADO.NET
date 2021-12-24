@@ -22,8 +22,7 @@ services:
     expose:
       - 5501
     volumes:
-      - ./docker/postgres/bootstrap/:/docker-entrypoint-initdb.d/
-      - ./docker/postgres/seeds/:/tmp/seeds/ 
+      - ./docker/postgres/:/docker-entrypoint-initdb.d/      
 
   oracle:
     container_name: ado.oracle

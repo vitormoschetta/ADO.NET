@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using App.Enums;
 using App.Interfaces;
+using Dapper;
 using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 
@@ -12,11 +13,15 @@ namespace App
     {
         static void Main(string[] args)
         {
-            var dbSettings = new DbSettings().GetSqlServerDbSettings();            
+            var dbSettings = new DbSettings();
+            dbSettings.Provider = EProvider.Postgresql;
+            dbSettings.ConnectionString = "Server=localhost;Port=5501;Database=postgres;User Id=postgres;Password=postgres;";
+            dbSettings.Commmand = "select p.name from adonet.product p limit 1";
+            dbSettings.CommandResponseType = ECommandResponseType.ExecuteScalar;
+
             Execute(dbSettings);
 
-            Console.WriteLine(dbSettings.RespostaTexto);
-            //Console.WriteLine(dbSettings.RespostaInteiro);
+            Console.WriteLine(dbSettings.ExecuteScalarResponse);
         }
 
         static void Execute(DbSettings dbSettings)
@@ -50,20 +55,20 @@ namespace App
 
             unitOfWork.BeginTransaction();
 
-            var dbCommand = unitOfWork.CreateCommand(dbSettings.CommandType, dbSettings.Comando); 
+            var dbCommand = unitOfWork.CreateCommand(dbSettings.CommandType, dbSettings.Commmand);
 
-            switch (dbSettings.ReturnCommamndType)
+            switch (dbSettings.CommandResponseType)
             {
-                case EReturnCommamndType.ExecuteNonQuery:
-                    dbSettings.RespostaInteiro = dbCommand.ExecuteNonQuery();
+                case ECommandResponseType.ExecuteNonQuery:
+                    dbSettings.ExecuteNonQueryResponse = dbCommand.ExecuteNonQuery();
                     break;
 
-                case EReturnCommamndType.ExecuteScalar:
-                    dbSettings.RespostaTexto = (string)dbCommand.ExecuteScalar();
+                case ECommandResponseType.ExecuteScalar:
+                    dbSettings.ExecuteScalarResponse = (string)dbCommand.ExecuteScalar();
                     break;
 
-                case EReturnCommamndType.DataReader:
-                    dbSettings.RespostaDataReader = dbCommand.ExecuteReader();
+                case ECommandResponseType.DataReader:
+                    dbSettings.DataReaderResponse = dbCommand.ExecuteReader();
                     break;
 
                 default:
