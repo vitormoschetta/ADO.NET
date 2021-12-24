@@ -3,14 +3,14 @@ version: '3'
 services:
   sqlserver:
     container_name: ado.sqlserver
-    image: mcr.microsoft.com/mssql/server:2019-latest    
+    image: mcr.microsoft.com/mssql/server:2019-latest   
+    environment:
+      SA_PASSWORD: "Pass123*"
+      ACCEPT_EULA: "Y"       
     ports:
       - "1433:1433"   
     volumes:      
-      - ./docker/sqlserver/seeds/:/tmp/seeds/
-    environment:
-      SA_PASSWORD: "Pass123*"
-      ACCEPT_EULA: "Y"      
+      - ./docker/sqlserver/:/tmp/seeds/    
 
   postgres:
     container_name: ado.postgres

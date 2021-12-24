@@ -1,7 +1,8 @@
 using System;
 using System.Data;
+using App.Interfaces;
 
-namespace App.Interfaces
+namespace App
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -13,20 +14,31 @@ namespace App.Interfaces
             _connection = connection;
         }
 
-        public IDbCommand CreateCommand(CommandType commandType, string commandText)
+        public IDbCommand CreateCommand(string commandText)
         {
             var command = _connection.CreateCommand();
-            command.CommandType = commandType;
+            command.CommandType = CommandType.Text;
             command.CommandText = commandText;
             command.Transaction = _transaction;
             return command;
         }
 
-        public void Dispose()
+        public int Execute(string commandText)
         {
-            _transaction.Dispose();
-            _connection.Close();
-            GC.SuppressFinalize(this);
+            var command = CreateCommand(commandText);
+            return command.ExecuteNonQuery();
+        }
+
+        public IDataReader Query(string commandText)
+        {
+            var command = CreateCommand(commandText);
+            return command.ExecuteReader();
+        }
+
+        public string QuerySingle(string commandText)
+        {
+            var command = CreateCommand(commandText);
+            return (string)command.ExecuteScalar();
         }
 
         public void BeginTransaction()
@@ -56,6 +68,13 @@ namespace App.Interfaces
                 _transaction.Rollback();
                 Dispose();
             }
+        }
+
+        public void Dispose()
+        {
+            _transaction.Dispose();
+            _connection.Close();
+            GC.SuppressFinalize(this);
         }
     }
 }

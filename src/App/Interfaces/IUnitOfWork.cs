@@ -7,7 +7,10 @@ namespace App.Interfaces
     {        
         IDbTransaction _transaction { get; set; }
         IDbConnection _connection { get; set; }
-        IDbCommand CreateCommand(CommandType commandType, string commandText);
+        IDbCommand CreateCommand(string commandText);
+        int Execute(string commandText);
+        IDataReader Query(string commandText);
+        string QuerySingle(string commandText);
         void BeginTransaction();
         void Commit();
         void Rollback();
