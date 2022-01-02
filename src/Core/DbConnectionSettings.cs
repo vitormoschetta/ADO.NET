@@ -1,17 +1,19 @@
-namespace App
+using Core.Enums;
+
+namespace Core
 {
     /// <summary>
-    /// Informações sobre a conexão com o Banco de Dados
+    /// Configurações de conexão com o Banco de Dados
     /// </summary>
-    public class DbConnectionInfo
+    public class DbConnectionSettings
     {
-        public DbConnectionInfo(string connectionString, EProvider provider)
+        public DbConnectionSettings(string connectionString, EDataBaseProvider dataBaseProvider)
         {
             ConnectionString = connectionString;
-            Provider = provider;
+            DataBaseProvider = dataBaseProvider;
         }
 
-        public DbConnectionInfo()
+        public DbConnectionSettings()
         {
             
         }
@@ -24,6 +26,6 @@ namespace App
         /// <summary>
         /// Enum Provedor de Banco de Dados: SqlServer, Postgres, Oracle, etc
         /// </summary>
-        public EProvider Provider { get; set; }
+        public EDataBaseProvider DataBaseProvider { get; set; }
     }
 }

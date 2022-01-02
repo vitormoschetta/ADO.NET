@@ -23,7 +23,7 @@ CREATE TABLE adonet.order_product (
 -- Seeds
 insert into adonet.product ("name", price) values('leite', 5.99);
 insert into adonet.product ("name", price) values('arroz', 21.50);	
-insert into adonet.product ("name", price) values('açucar', 6.75);	
+insert into adonet.product ("name", price) values('acucar', 6.75);	
 
 insert into adonet.order ("date") values(to_timestamp('01/01/2022 10:59:00', 'MM/DD/YYYY HH24:MI:SS'));	
 insert into adonet.order ("date") values(to_timestamp('02/01/2022 12:00:00', 'MM/DD/YYYY HH24:MI:SS'));	
@@ -45,5 +45,5 @@ insert into
 	),
 	(
 		(select o.id from adonet.order o order by o.id desc limit 1),
-		(select p.id from adonet.product p where p.name = 'açucar')
+		(select p.id from adonet.product p where p.name = 'acucar')
 	)
