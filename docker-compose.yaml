@@ -18,9 +18,9 @@ services:
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
-      - 5501:5432
+      - 5454:5432
     expose:
-      - 5501
+      - 5454
     volumes:
       - ./docker/postgres/:/docker-entrypoint-initdb.d/      
 

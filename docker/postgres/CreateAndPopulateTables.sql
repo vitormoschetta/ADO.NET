@@ -42,8 +42,4 @@ insert into
 	(
 		(select o.id from adonet.order o order by o.id desc limit 1),
 		(select p.id from adonet.product p where p.name = 'arroz')
-	),
-	(
-		(select o.id from adonet.order o order by o.id desc limit 1),
-		(select p.id from adonet.product p where p.name = 'acucar')
 	)

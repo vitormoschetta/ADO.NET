@@ -12,10 +12,9 @@ namespace App
     {
         static void Main(string[] args)
         {
-            var connStr = "Server=localhost;Port=5501;Database=postgres;User Id=postgres;Password=postgres;";
-            var dbConnectionSettings = new DbConnectionSettings(connStr, EDataBaseProvider.Postgresql);
+            var connStr = "Server=localhost;Port=5454;Database=postgres;User Id=postgres;Password=postgres;"; 
 
-            IDbConnection dbConnection = DataBaseProvider.GetProviderConnection(dbConnectionSettings);
+            IDbConnection dbConnection = new DbFactory(connStr).CreateConector(EDataBaseProvider.Postgresql);
 
             DeleteNewProducts(dbConnection);
             PrintProductQuantities(dbConnection);
@@ -133,7 +132,7 @@ namespace App
         {
             IUnitOfWork uow = new UnitOfWork(dbConnection);
 
-            uow.Execute("delete from adonet.product p where p.id > 3");           
+            uow.Execute("delete from adonet.product p where p.id > 2");           
         }
 
     }
